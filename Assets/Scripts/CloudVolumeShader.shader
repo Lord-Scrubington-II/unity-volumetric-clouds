@@ -85,7 +85,7 @@ Shader "Hidden/NewImageEffectShader"
 
                 // invert the projection of camera-space direction --> ndc-uv coordinates...
                 float3 direction = mul(_CameraInverseProjection, float4(ndc_xy, 0.0f, -1.0f)).xyz;
-	            // ...then, transform to world space and normalize.
+	            // ...then, transform to world space. NOTE: Not yet normalized, as we need the length of this vector!
                 direction = mul(unity_CameraToWorld, float4(direction, 0.0f)).xyz;
                 output.cam_ray = NewRay(origin, direction);
                 // END ray generation
@@ -96,11 +96,36 @@ Shader "Hidden/NewImageEffectShader"
             sampler2D _MainTex;
             sampler2D _CameraDepthTexture;
 
-            float3 _BoxMax;
-            float3 _BoxMin;
+            // BEGIN: values set & passed from inspector -------------------------------------------------------
+            float3 _BoxMax; // Max world space point (largest 2-norm) of the cloud's bounding box
+            float3 _BoxMin; // Min world space point (smallest 2-norm) of the cloud's bounding box
+            
+            float3 _SunDir; // direction of the sunlight
+            float3 _SunColour; // colour of the sunlight
 
-            float3 _SunDir;
-            float3 _SunColour;
+            float3 _CloudsOffset; // should allow the cloud to "move" in the box
+            float _CloudsScale; // used to manipulate the mapping from texture to world space
+            float _DensityReadThresh; // any density reading below this threshold is considered 0
+            float _DensityMult; // just a multiplier for the density reading, should be used to manipulate cloud darkness
+            int _NumSamples; // controls # of steps taken when marching the light ray
+            // END: values set & passed from inspector ---------------------------------------------------------
+
+
+            // - BEGIN: Textures passed from C# ----------------------------------------------------------------
+            // _Worley {Texture3D<float4>}: This is a 3D Worley noise texture (currently) produced by a 
+            //      3rd-party noise generator. There should be 3 levels of increasing granularity stored in the
+            //      red, green, and blue channels of the noise, with _Worley.r being the least granular.
+            //      Used to create large, billowy cloud shapes.
+            // _Perlin {Texture3D<float4>}: This is a 3D Perlin noise texture (currently) produced by a 
+            //      3rd-party noise generator. Used to add fine details to the edge of the cloud shapes.
+            // sampler_Worley {SamplerState}: Used to sample from the Worley noise texture.
+            // sampler_Perlin {SamplerState}: Used to sample from the Perlin noise texture.
+            Texture3D<float4> _Worley; 
+            Texture3D<float4> _Perlin;
+            SamplerState sampler_Worley;
+            SamplerState sampler_Perlin;
+            // - END: Textures passed from C# ------------------------------------------------------------------
+
 
             // Ray-box intersection
             bool BoxIntersects(
@@ -124,24 +149,33 @@ Shader "Hidden/NewImageEffectShader"
                 dist_to_box = max(0.0f, dist_near); // if inside box, will be 0
                 dist_inside_box = max(0, dist_far - dist_to_box); // shouldn't really ever be negative unless facing away from the box
 
-                if (dist_near > dist_far || dist_near < 0.0f) {
+                if (dist_near > dist_far) {
                     return false;
                 } return true;
+            }
+
+            float NoiseSampleDensity(float3 pos) {
+                // Experimentally, these seem like good coefficients for the control variables
+                float3 xyz = pos * _CloudsScale * 0.001 + _CloudsOffset * 0.1; 
+                float4 worley_read = _Worley.SampleLevel(sampler_Worley, xyz, 0.0f);
+                float cloud_density = worley_read.r < _DensityReadThresh ? 0.0f : worley_read.r * _DensityMult;
+                return cloud_density;
             }
 
 
             fixed4 frag (v2f input) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, input.uv);
-
+                
+                // - BEGIN: Initial Ray Intersection -------------------------------------------------
                 float nonlinear_depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, input.uv);
-                //float cam_frustum_len = _ProjectionParams.z - _ProjectionParams.y; // far - near 
-                float depth = LinearEyeDepth(nonlinear_depth) * length(input.cam_ray.direction);
+                // float cam_frustum_len = _ProjectionParams.z - _ProjectionParams.y; // far - near 
+                float depth = LinearEyeDepth(nonlinear_depth) * length(input.cam_ray.direction); // for some reason, need to multiply by 
 
                 Ray cam_ray = input.cam_ray;
                 cam_ray.direction = normalize(cam_ray.direction);
 
-                // cloud container intersection t-values
+                // cloud container-camera ray intersection t-values
                 float dist_to_box; float dist_in_box; 
                 bool hit_cloud = BoxIntersects(
                     cam_ray,
@@ -150,12 +184,34 @@ Shader "Hidden/NewImageEffectShader"
                     dist_to_box,
                     dist_in_box
                 );
+                // - END: Initial Ray Intersection ---------------------------------------------------
 
-                if (hit_cloud && dist_to_box < depth) {
-                    col = 0;
+                // now, we want to find the sample step size
+                // and ray entry & exit points
+                float step_size = dist_in_box / (float)_NumSamples;
+             
+                float3 cloud_entry_point = cam_ray.origin + cam_ray.direction * dist_to_box;
+                float3 cloud_exit_point = cloud_entry_point + cam_ray.direction * dist_in_box;
+                float3 sample_point = cloud_entry_point;
+
+                float density_measured = 0;
+                if (hit_cloud && dist_to_box < depth) { // begin ray march
+                    // move sample point along ray by step size for each sample
+                    // then, add up the density values and attenuate incoming light
+                    // by the transmittance function.
+                    float dist_travelled = 0.0f;
+                    while (dist_travelled < dist_in_box) {
+                        // effectively, what we are doing is solving a line integral
+                        // over the noise density function. Hence, we will want to multiply
+                        // by the step size to get an estimate over quadrature.
+                        density_measured += NoiseSampleDensity(sample_point) * step_size;
+                        sample_point = sample_point + cam_ray.direction * step_size;
+                        dist_travelled += step_size;
+                    }
                 }
 
-                return col;
+                float transmittance = exp(-density_measured);
+                return col * transmittance;
             }
             ENDCG
         }

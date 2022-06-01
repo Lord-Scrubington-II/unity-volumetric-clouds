@@ -6,15 +6,32 @@ using UnityEngine;
 public class CloudRenderMaster : MonoBehaviour
 {
     private Camera masterCam;
-    public Light sun;
+    [SerializeField] private Light sun;
 
     [SerializeField] private Shader cloudShader;
     [SerializeField] private Transform cloudContainer; // a transform that defines the box surrounding the cloud.
     private Material cloudMaterial; // set in inspector, should be the scene's directional light. 
 
+    // 3D Perlin-Worley shape and detail noise textures passed from inspector
+    [SerializeField] private Texture3D cloudShapeNoise;
+    [SerializeField] private Texture3D cloudDetailNoise;
+
+    // Cloud sampling control vars
+    [SerializeField] private Vector3 cloudsOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
+    [SerializeField] private float cloudsScale = 1.0f; // used to manipulate the mapping from texture to world space
+    [SerializeField] [Range(0, 1)] private float densityThreshold = 0.2f; // any density reading below this threshold is considered 0
+    [SerializeField] [Range(-1, 1)] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
+    [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
+    public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
+    public float CloudsScale { get => cloudsScale; set => cloudsScale = value; }
+    public float DensityThreshold { get => densityThreshold; set => densityThreshold = value; }
+    public float DensityControlMultiplier { get => densityControlMultiplier; set => densityControlMultiplier = value; }
+    public int SampleCount { get => sampleCount; set => sampleCount = value; }
+
     private void Awake()
     {
         masterCam = gameObject.GetComponent<Camera>();
+        // noiseGenerator = FindObjectOfType<NoiseGenerator>();
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -35,7 +52,7 @@ public class CloudRenderMaster : MonoBehaviour
 
     private void PassShaderParams()
     {
-        // - Lights -------------------------------
+        // - Lights ---------------------------------
         Vector3 sunlight_dir = sun.transform.forward;
         cloudMaterial.SetVector("_SunDir", sunlight_dir);
         cloudMaterial.SetVector("_SunColour", sun.color);
@@ -49,6 +66,16 @@ public class CloudRenderMaster : MonoBehaviour
         // Pass the cloud container's boundary points
         cloudMaterial.SetVector("_BoxMax", cloudContainer.position + cloudContainer.localScale / 2.0f);
         cloudMaterial.SetVector("_BoxMin", cloudContainer.position - cloudContainer.localScale / 2.0f);
-    }
 
+        // Pass the 3D noise textures
+        cloudMaterial.SetTexture("_Worley", cloudShapeNoise);
+        cloudMaterial.SetTexture("_Perlin", cloudDetailNoise);
+
+        // Pass the cloud control vars
+        cloudMaterial.SetVector("_CloudsOffset", CloudsOffset);
+        cloudMaterial.SetFloat("_CloudsScale", CloudsScale);
+        cloudMaterial.SetFloat("_DensityReadThresh", DensityThreshold);
+        cloudMaterial.SetFloat("_DensityMult", DensityControlMultiplier);
+        cloudMaterial.SetInt("_NumSamples", SampleCount);
+    }
 }
