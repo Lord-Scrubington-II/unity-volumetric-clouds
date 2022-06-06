@@ -246,7 +246,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -303,13 +303,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.8084722, y: -0.15169007, z: 0.008052982, w: 0.5685929}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.5365403, y: -0.117373124, z: 0.48560238, w: 0.68010175}
+  m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 67.195, y: -155.704, z: -142.47}
+  m_LocalEulerAnglesHint: {x: 57.543, y: 762.337, z: 95.064}
 --- !u!1 &963028399
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +423,7 @@ GameObject:
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!81 &963194226
 AudioListener:
@@ -483,13 +483,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.1848326, y: -0, z: -0, w: 0.98277}
-  m_LocalPosition: {x: 0, y: 4.86, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.18473016, y: 0.0038517138, z: 0.007831278, w: 0.98275054}
+  m_LocalPosition: {x: -0.000000004968, y: 4.86, z: -10}
+  m_LocalScale: {x: 1, y: 0.19943, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 21.303, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 21.286, y: 0.643, z: 1.034}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,12 +506,16 @@ MonoBehaviour:
   cloudShader: {fileID: 4800000, guid: f5c64d8211c6d214ebb8f72f90496efc, type: 3}
   cloudContainer: {fileID: 1608765496}
   cloudShapeNoise: {fileID: 11700000, guid: b01c3abd14e744d25afed97c9b8ca279, type: 2}
-  cloudDetailNoise: {fileID: 11700000, guid: 11ded9c9d808b4365b4b40a5198368be, type: 2}
-  cloudsOffset: {x: 0, y: 0, z: 0}
-  cloudsScale: 77.8
-  densityThreshold: 0.505
-  densityControlMultiplier: 0.352
-  sampleCount: 95
+  cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
+  cloudsOffset: {x: 7.87, y: 0.83, z: -1.49}
+  cloudsScale: 4.16
+  emptySpaceOffset: 4.13
+  densityControlMultiplier: 0.087
+  absorptionCoefficient: 1
+  darknessThreshold: 0.757
+  lightScatteringMultiplier: 0.77
+  sampleCount: 98
+  lightSampleCount: 5
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,26 +560,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b99ce195aa394570b614d890804bdfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeTextureType: 0
-  activeChannel: 0
-  autoUpdate: 0
-  logComputeTime: 0
-  shapeResolution: 132
-  detailResolution: 32
-  shapeSettings: []
-  detailSettings: []
-  noiseCompute: {fileID: 7200000, guid: 18d71ea19186c49d9b17692355749824, type: 3}
-  copy: {fileID: 7200000, guid: 7abd06564e4244f60857856659a3809f, type: 3}
-  viewerEnabled: 1
-  viewerGreyscale: 1
-  viewerShowAllChannels: 0
-  viewerSliceDepth: 0
-  viewerTileAmount: 1
-  viewerSize: 0.531
-  updateNoise: 0
-  showSettingsEditor: 1
-  shapeTexture: {fileID: 1038479542}
-  detailTexture: {fileID: 1568872428}
 --- !u!4 &1010369214
 Transform:
   m_ObjectHideFlags: 0
@@ -590,41 +574,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1038479542
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ShapeNoise
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 3
-  m_Width: 132
-  m_Height: 132
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthFormat: 0
-  m_ColorFormat: 24
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 3
-  m_VolumeDepth: 132
 --- !u!1 &1226501842
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2db19fe17414199ba6159361e16237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slicer: {fileID: 7200000, guid: 21b2f0659c6bd434f81825e14415969a, type: 3}
 --- !u!4 &1428571469
 Transform:
   m_ObjectHideFlags: 0
@@ -955,41 +903,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1568872428
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: DetailNoise
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 3
-  m_Width: 32
-  m_Height: 32
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthFormat: 0
-  m_ColorFormat: 24
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 3
-  m_VolumeDepth: 32
 --- !u!1 &1608765495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,8 +928,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.27, y: 0.59, z: -1.28}
-  m_LocalScale: {x: 13.688866, y: 3.2827506, z: 11.945791}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 286.68716, y: 93.8396, z: 288.5702}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

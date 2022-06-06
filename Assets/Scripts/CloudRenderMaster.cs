@@ -19,14 +19,23 @@ public class CloudRenderMaster : MonoBehaviour
     // Cloud sampling control vars
     [SerializeField] private Vector3 cloudsOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
     [SerializeField] private float cloudsScale = 1.0f; // used to manipulate the mapping from texture to world space
-    [SerializeField] [Range(0, 1)] private float densityThreshold = 0.2f; // any density reading below this threshold is considered 0
+    [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
     [SerializeField] [Range(-1, 1)] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
+    [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
+    [SerializeField] private float lightScatteringMultiplier = 0.5f; // controls # of steps taken when marching the light ray
+
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(1, 10)] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
     public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
     public float CloudsScale { get => cloudsScale; set => cloudsScale = value; }
-    public float DensityThreshold { get => densityThreshold; set => densityThreshold = value; }
+    public float EmptySpaceOffset { get => emptySpaceOffset; set => emptySpaceOffset = value; }
     public float DensityControlMultiplier { get => densityControlMultiplier; set => densityControlMultiplier = value; }
     public int SampleCount { get => sampleCount; set => sampleCount = value; }
+    public int LightSampleCount { get => lightSampleCount; set => lightSampleCount = value; }
+    public float AbsorptionCoefficient { get => absorptionCoefficient; set => absorptionCoefficient = value; }
+    public float DarknessThreshold { get => darknessThreshold; set => darknessThreshold = value; }
+    public float LightScatteringMultiplier { get => lightScatteringMultiplier; set => lightScatteringMultiplier = value; }
 
     private void Awake()
     {
@@ -74,8 +83,15 @@ public class CloudRenderMaster : MonoBehaviour
         // Pass the cloud control vars
         cloudMaterial.SetVector("_CloudsOffset", CloudsOffset);
         cloudMaterial.SetFloat("_CloudsScale", CloudsScale);
-        cloudMaterial.SetFloat("_DensityReadThresh", DensityThreshold);
+
+        cloudMaterial.SetFloat("_DensityReadOffset", EmptySpaceOffset);
         cloudMaterial.SetFloat("_DensityMult", DensityControlMultiplier);
+        cloudMaterial.SetFloat("_AbsorptionCoeff", AbsorptionCoefficient);
+        cloudMaterial.SetFloat("_DarknessThreshold", DarknessThreshold);
+
         cloudMaterial.SetInt("_NumSamples", SampleCount);
+        cloudMaterial.SetInt("_StepsToLight", LightSampleCount);
+
+        cloudMaterial.SetFloat("_LightScatteringMult", LightScatteringMultiplier);
     }
 }
