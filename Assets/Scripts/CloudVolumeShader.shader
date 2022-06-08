@@ -104,14 +104,21 @@ Shader "Hidden/NewImageEffectShader"
             float3 _BoxMax; // Max world space point (largest 2-norm) of the cloud's bounding box
             float3 _BoxMin; // Min world space point (smallest 2-norm) of the cloud's bounding box
 
+            // noise sampling
             float3 _CloudsOffset; // should allow the cloud to "move" in the box
             float _CloudsScale; // used to manipulate the mapping from texture to world space
+            float4 _ShapeNoiseWeights; // used to form a linear combination between the shape noise channels
 
+            float3 _DetailOffset; // allows details to be controlled independently of the shape
+            float _DetailScale; // used to manipulate the mapping from detail texture to world space
+            float3 _DetailNoiseWeights; // used to form a linear combination between the shape noise channels
+            float _DetailNoiseOverallWeight; // controls overall importance of detail noise
+
+            // lighting vars
             float _DensityReadOffset; // to be subtracted from the density reading
             float _DensityMult; // just a multiplier for the density reading, should be used to manipulate cloud darkness
             float _AbsorptionCoeff; // used to manipulate absorption from Beer's law
             float _DarknessThreshold; // minimum light transmittance along the secondary rays
-            float _LightScatteringMult;
 
             int _NumSamples; // controls # of steps taken when marching the camera ray
             int _StepsToLight; // controls # of steps taken when marching towards the sun
@@ -199,12 +206,67 @@ Shader "Hidden/NewImageEffectShader"
             }
             // - END: Light Scattering Model -------------------------------------------------------------
 
-            float NoiseSampleDensity(float3 pos) {
+            float NoiseSampleDensitySimple(float3 pos) {
                 // Experimentally, these seem like good coefficients for the control variables
                 float3 xyz = pos * _CloudsScale * 0.001 + _CloudsOffset * 0.1;
                 float4 worley_read = _Worley.SampleLevel(sampler_Worley, xyz, 0);
                 float cloud_density = (worley_read.r - _DensityReadOffset * 0.1f) * _DensityMult;
                 return cloud_density;
+            }
+
+            float NoiseSampleDensity(float3 pos) {
+                // the offset and scale of the shape and noise texture readings should be independent
+                // Experimentally, these seem like good coefficients for the control variables
+                const float scale_coeff = 0.0001;
+                const float position_offset_coeff = 0.01;
+                const float density_read_coeff = 0.01;
+                const float detail_read_coeff = 0.1;
+
+                float3 xyz = pos * _CloudsScale * scale_coeff;
+
+                // we want to now calculate some reasonable falloff at all the edges of the container
+                // so that they don't appear flattened against the edges of the bounding box.
+                // adapted from Sebastian Lague's code!
+                const float container_edge_fade_dist = 30;
+                float dist_edges_x = min(container_edge_fade_dist, abs(min(pos.x - _BoxMin.x, _BoxMax.x - pos.x)));
+                float dist_edges_y = min(container_edge_fade_dist, abs(min(pos.y - _BoxMin.y, _BoxMax.y - pos.y)));
+                float dist_edges_z = min(container_edge_fade_dist, abs(min(pos.z - _BoxMin.z, _BoxMax.z - pos.z)));
+                float edge_weight = min(min(dist_edges_x, dist_edges_y), dist_edges_z) / container_edge_fade_dist;
+                // float edge_weight = min(dist_edges_x, dist_edges_z) / container_edge_fade_dist;
+
+                // shape noise read position
+                float3 worley_xyz = xyz + _CloudsOffset * position_offset_coeff;
+                float4 worley_read = _Worley.SampleLevel(sampler_Worley, worley_xyz, 0);
+                
+                // now, we want to take the normalized shape noise weights.
+                // must divide by the VECTOR 1-NORM because we want the weights to sum to 1.
+                float4 cloud_shape_weights_normalized = _ShapeNoiseWeights / (_ShapeNoiseWeights.x + _ShapeNoiseWeights.y + _ShapeNoiseWeights.z + _ShapeNoiseWeights.w);
+
+                // now, combine the noise weights
+                float cloud_density = (
+                    dot(worley_read, cloud_shape_weights_normalized)
+                    - _DensityReadOffset * 0.1
+                ) * edge_weight;
+
+                // for nonzero shape density readings, we will want to sample the detail noise.
+                // the detail noise will be SUBTRACTED from the shape to produce the "wispy clouds" effect
+                // that we are looking for.
+                if (cloud_density > 0.0) {
+                    // sampling is almost exactly the same as with the shape noise texture
+                    float3 perlin_xyz = xyz * _DetailScale + _DetailOffset * position_offset_coeff;
+                    float4 perlin_read = _Perlin.SampleLevel(sampler_Perlin, perlin_xyz, 0);
+                    float3 cloud_detail_weights_normalized = _DetailNoiseWeights / (_DetailNoiseWeights.x + _DetailNoiseWeights.y + _DetailNoiseWeights.z);
+
+                    // combine the noise weights
+                    float detail_density = dot(perlin_read, cloud_detail_weights_normalized);
+
+                    // now, we want to subtract the detail noise. Greater weight should be given to areas with lesser density
+                    // so that more is subtracted from the edges instead of the centre. Partialyl adapted from Sebastian Lague's code.
+                    float detail_density_weight = 1.0f - cloud_density;
+                    detail_density_weight = detail_density_weight * detail_density_weight;
+                    cloud_density = cloud_density - detail_density * detail_density_weight * detail_read_coeff * _DetailNoiseOverallWeight;
+                }
+                return cloud_density * _DensityMult * density_read_coeff;
             }
 
             // This function marches a light ray towards the sun to accumulate density
@@ -216,7 +278,7 @@ Shader "Hidden/NewImageEffectShader"
                 float dist_in_box;
                 BoxIntersects(to_light, _BoxMin, _BoxMax, dist_to_box, dist_in_box);
 
-                float density_measured = 0;
+                float density_measured = 0.0f;
                 float density_read_pos = start_point;
                 float step_size = dist_in_box / (float)_StepsToLight;
             
@@ -225,7 +287,7 @@ Shader "Hidden/NewImageEffectShader"
                     // effectively, what we are doing is solving a line integral
                     // over the noise density function. Hence, we will want to multiply
                     // by the step size to get an estimate over quadrature.
-                    density_measured += NoiseSampleDensity(density_read_pos) * step_size;
+                    density_measured += max(NoiseSampleDensity(density_read_pos), 0.0f) * step_size;
                     density_read_pos += to_light.direction * step_size;
                 }
 
@@ -234,7 +296,7 @@ Shader "Hidden/NewImageEffectShader"
                 
                 // idea of including this darkness threshold comes from Sebastian Lague's video.
                 // allows me to manipulate the darkness of the clouds with greater weight given to denser areas.
-                return _DarknessThreshold + (1 - _DarknessThreshold) * transmittance;
+                return _DarknessThreshold + (1.0f - _DarknessThreshold) * transmittance;
             }
 
             fixed4 frag (v2f input) : SV_Target
@@ -267,7 +329,7 @@ Shader "Hidden/NewImageEffectShader"
                 float3 sample_point = cloud_entry_point;
 
                 float density_measured = 0.0f;
-                float3 sunlight_transmittance = 0.0f; // start with 0 light energy and add up contributions from sunbeams
+                float3 sunlight_transmittance = 0.0f; // start with 0 light energy from scattering and add up contributions from sunbeams
                 float occlusion_transmittance = 1.0f; // start with full transmittance and accumulate attenuations
                 if (hit_cloud && dist_to_box < depth) { // begin ray march
                     // move sample point along ray by step size for each sample
@@ -275,12 +337,12 @@ Shader "Hidden/NewImageEffectShader"
                     // by the transmittance function.
                     float dist_travelled = 0.0f;
                     while (dist_travelled < dist_in_box) {
-                        density_measured = NoiseSampleDensity(sample_point);
+                        density_measured = max(NoiseSampleDensity(sample_point), 0.0f);
 
                         if (density_measured > 0) { // only for nonzero density reads to we want to march towards light
                             // transmittance along sunbeam
                             float source_transmittance = LightMarch(sample_point);
-                            sunlight_transmittance += density_measured * step_size * source_transmittance * occlusion_transmittance;
+                            sunlight_transmittance += density_measured * step_size * occlusion_transmittance * source_transmittance;
 
                             // modify transmittance for next point along primary ray (i.e. its energy contribution will be smaller by Beer's law)
                             // this is mathematically equivalent to taking the density path integral first by the laws of exponents
@@ -300,7 +362,7 @@ Shader "Hidden/NewImageEffectShader"
                 // float transmittance = exp(-density_measured);
                 // the cloud's colour is the light energy accumulated multiplied by the sun's colour.
                 // the denser, the more that the cloud's colour contributes to the pixel.
-                float3 cloud_colour = sunlight_transmittance * _SunColour;
+                float3 cloud_colour = exp(-_AbsorptionCoeff) * sunlight_transmittance * _SunColour;
                 
                 // add attenuated colour of occluded geometry to the colour of the cloud itself to get the
                 // final colour for this pixel

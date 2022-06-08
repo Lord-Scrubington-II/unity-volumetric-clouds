@@ -303,13 +303,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.5365403, y: -0.117373124, z: 0.48560238, w: 0.68010175}
+  m_LocalRotation: {x: 0.21627791, y: -0.58084494, z: 0.6788472, w: -0.39371255}
   m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 57.543, y: 762.337, z: 95.064}
+  m_LocalEulerAnglesHint: {x: 38.193, y: 432.855, z: -91.11}
 --- !u!1 &963028399
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +458,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 26.991467
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -507,15 +507,19 @@ MonoBehaviour:
   cloudContainer: {fileID: 1608765496}
   cloudShapeNoise: {fileID: 11700000, guid: b01c3abd14e744d25afed97c9b8ca279, type: 2}
   cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
-  cloudsOffset: {x: 7.87, y: 0.83, z: -1.49}
-  cloudsScale: 4.16
-  emptySpaceOffset: 4.13
-  densityControlMultiplier: 0.087
-  absorptionCoefficient: 1
-  darknessThreshold: 0.757
-  lightScatteringMultiplier: 0.77
-  sampleCount: 98
-  lightSampleCount: 5
+  cloudsOffset: {x: -6.71, y: 4.39, z: -1.49}
+  cloudsScale: 10.87
+  shapeNoiseWeights: {x: 2.18, y: 0.15, z: 0.15, w: 0.42}
+  cloudDetailOffset: {x: 1.9, y: 0, z: 0}
+  cloudDetailScale: 6.4
+  cloudDetailWeight: 1.58
+  detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
+  emptySpaceOffset: 4.02
+  densityControlMultiplier: 3.71
+  absorptionCoefficient: 0.52
+  darknessThreshold: 0.689
+  sampleCount: 102
+  lightSampleCount: 4
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,8 +932,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 286.68716, y: 93.8396, z: 288.5702}
+  m_LocalPosition: {x: -136, y: 46, z: -429.8}
+  m_LocalScale: {x: 732.4136, y: 305.48624, z: 833.04047}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1068,7 +1072,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1918591219}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -108.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1226501843}

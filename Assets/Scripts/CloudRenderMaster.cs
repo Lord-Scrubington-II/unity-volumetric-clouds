@@ -16,17 +16,28 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] private Texture3D cloudShapeNoise;
     [SerializeField] private Texture3D cloudDetailNoise;
 
-    // Cloud sampling control vars
+    // - BEGIN: Cloud sampling control vars -------
+    // Shape
     [SerializeField] private Vector3 cloudsOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
     [SerializeField] private float cloudsScale = 1.0f; // used to manipulate the mapping from texture to world space
+    [SerializeField] private Vector4 shapeNoiseWeights = new Vector4(1.0f, 0.0f, 0.0f, 0.0f); // relative weights to be used for the 4 different shape noise channels.
+    
+    // Detail
+    [SerializeField] private Vector3 cloudDetailOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
+    [SerializeField] private float cloudDetailScale = 1.0f; // used to manipulate the mapping from texture to world space
+    [SerializeField] [Range(0, 3)] private float cloudDetailWeight = 1.0f; // used to manipulate importance of the detail noise
+    [SerializeField] private Vector3 detailNoiseChannelWeights = new Vector3(1.0f, 0.0f, 0.0f); // relative weights to be used for the 3 different shape noise channels.
+
+
     [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
-    [SerializeField] [Range(-1, 1)] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
+    [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
     [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
-    [SerializeField] private float lightScatteringMultiplier = 0.5f; // controls # of steps taken when marching the light ray
 
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
-    [SerializeField] [Range(1, 10)] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
+    // - End: Cloud sampling control vars -------
+
     public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
     public float CloudsScale { get => cloudsScale; set => cloudsScale = value; }
     public float EmptySpaceOffset { get => emptySpaceOffset; set => emptySpaceOffset = value; }
@@ -35,7 +46,11 @@ public class CloudRenderMaster : MonoBehaviour
     public int LightSampleCount { get => lightSampleCount; set => lightSampleCount = value; }
     public float AbsorptionCoefficient { get => absorptionCoefficient; set => absorptionCoefficient = value; }
     public float DarknessThreshold { get => darknessThreshold; set => darknessThreshold = value; }
-    public float LightScatteringMultiplier { get => lightScatteringMultiplier; set => lightScatteringMultiplier = value; }
+    public Vector4 ShapeNoiseWeights { get => shapeNoiseWeights; set => shapeNoiseWeights = value; }
+    public Vector3 CloudDetailOffset { get => cloudDetailOffset; set => cloudDetailOffset = value; }
+    public float CloudDetailScale { get => cloudDetailScale; set => cloudDetailScale = value; }
+    public Vector3 DetailNoiseChannelWeights { get => detailNoiseChannelWeights; set => detailNoiseChannelWeights = value; }
+    public float CloudDetailWeight { get => cloudDetailWeight; set => cloudDetailWeight = value; }
 
     private void Awake()
     {
@@ -83,6 +98,12 @@ public class CloudRenderMaster : MonoBehaviour
         // Pass the cloud control vars
         cloudMaterial.SetVector("_CloudsOffset", CloudsOffset);
         cloudMaterial.SetFloat("_CloudsScale", CloudsScale);
+        cloudMaterial.SetVector("_ShapeNoiseWeights", ShapeNoiseWeights);
+
+        cloudMaterial.SetVector("_DetailOffset", CloudDetailOffset);
+        cloudMaterial.SetFloat("_DetailScale", CloudDetailScale);
+        cloudMaterial.SetVector("_DetailNoiseWeights", DetailNoiseChannelWeights);
+        cloudMaterial.SetFloat("_DetailNoiseOverallWeight", CloudDetailWeight);
 
         cloudMaterial.SetFloat("_DensityReadOffset", EmptySpaceOffset);
         cloudMaterial.SetFloat("_DensityMult", DensityControlMultiplier);
@@ -92,6 +113,6 @@ public class CloudRenderMaster : MonoBehaviour
         cloudMaterial.SetInt("_NumSamples", SampleCount);
         cloudMaterial.SetInt("_StepsToLight", LightSampleCount);
 
-        cloudMaterial.SetFloat("_LightScatteringMult", LightScatteringMultiplier);
+        // cloudMaterial.SetFloat("_LightScatteringMult", LightScatteringMultiplier);
     }
 }
