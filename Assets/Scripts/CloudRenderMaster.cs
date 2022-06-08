@@ -15,6 +15,7 @@ public class CloudRenderMaster : MonoBehaviour
     // 3D Perlin-Worley shape and detail noise textures passed from inspector
     [SerializeField] private Texture3D cloudShapeNoise;
     [SerializeField] private Texture3D cloudDetailNoise;
+    [SerializeField] private Texture blueNoise; // for softening image by jittering raymarch start position
 
     // - BEGIN: Cloud sampling control vars -------
     // Shape
@@ -28,14 +29,17 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] [Range(0, 3)] private float cloudDetailWeight = 1.0f; // used to manipulate importance of the detail noise
     [SerializeField] private Vector3 detailNoiseChannelWeights = new Vector3(1.0f, 0.0f, 0.0f); // relative weights to be used for the 3 different shape noise channels.
 
-
+    // Lighting
     [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
     [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
     [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(-1, 1)] private float forwardScattering = 0.5f; // the scattering term of the Henyey-Greenstein phase function.
+    [SerializeField] [Range(0, 1)] private float scatteringCoefficient = 0.2f; // the scattering term of the Henyey-Greenstein phase function.
 
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
     [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
     // - End: Cloud sampling control vars -------
 
     public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
@@ -51,6 +55,9 @@ public class CloudRenderMaster : MonoBehaviour
     public float CloudDetailScale { get => cloudDetailScale; set => cloudDetailScale = value; }
     public Vector3 DetailNoiseChannelWeights { get => detailNoiseChannelWeights; set => detailNoiseChannelWeights = value; }
     public float CloudDetailWeight { get => cloudDetailWeight; set => cloudDetailWeight = value; }
+    public float ForwardScattering { get => forwardScattering; set => forwardScattering = value; }
+    public float ScatteringCoefficient { get => scatteringCoefficient; set => scatteringCoefficient = value; }
+    public float BlueNoiseStrength { get => blueNoiseStrength; set => blueNoiseStrength = value; }
 
     private void Awake()
     {
@@ -94,6 +101,7 @@ public class CloudRenderMaster : MonoBehaviour
         // Pass the 3D noise textures
         cloudMaterial.SetTexture("_Worley", cloudShapeNoise);
         cloudMaterial.SetTexture("_Perlin", cloudDetailNoise);
+        cloudMaterial.SetTexture("_BlueNoise", blueNoise);
 
         // Pass the cloud control vars
         cloudMaterial.SetVector("_CloudsOffset", CloudsOffset);
@@ -109,9 +117,12 @@ public class CloudRenderMaster : MonoBehaviour
         cloudMaterial.SetFloat("_DensityMult", DensityControlMultiplier);
         cloudMaterial.SetFloat("_AbsorptionCoeff", AbsorptionCoefficient);
         cloudMaterial.SetFloat("_DarknessThreshold", DarknessThreshold);
+        cloudMaterial.SetFloat("_ScatteringTerm", ForwardScattering);
+        cloudMaterial.SetFloat("_ScatteringCoeff", ScatteringCoefficient);
 
         cloudMaterial.SetInt("_NumSamples", SampleCount);
         cloudMaterial.SetInt("_StepsToLight", LightSampleCount);
+        cloudMaterial.SetFloat("_BlueNoiseStrength", BlueNoiseStrength);
 
         // cloudMaterial.SetFloat("_LightScatteringMult", LightScatteringMultiplier);
     }

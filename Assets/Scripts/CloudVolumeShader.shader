@@ -114,14 +114,18 @@ Shader "Hidden/NewImageEffectShader"
             float3 _DetailNoiseWeights; // used to form a linear combination between the shape noise channels
             float _DetailNoiseOverallWeight; // controls overall importance of detail noise
 
+            int _NumSamples; // controls # of steps taken when marching the camera ray
+            int _StepsToLight; // controls # of steps taken when marching towards the sun
+            float _BlueNoiseStrength; // controls how much to jitter ray starting pos
+
             // lighting vars
             float _DensityReadOffset; // to be subtracted from the density reading
             float _DensityMult; // just a multiplier for the density reading, should be used to manipulate cloud darkness
             float _AbsorptionCoeff; // used to manipulate absorption from Beer's law
             float _DarknessThreshold; // minimum light transmittance along the secondary rays
+            float _ScatteringTerm; // the scattering term of the Henyey-Greenstein phase function.
+            float _ScatteringCoeff; // for controlling the forward scattering
 
-            int _NumSamples; // controls # of steps taken when marching the camera ray
-            int _StepsToLight; // controls # of steps taken when marching towards the sun
             // END: values set & passed from inspector ---------------------------------------------------------
 
 
@@ -132,19 +136,19 @@ Shader "Hidden/NewImageEffectShader"
             //      Used to create large, billowy cloud shapes.
             // _Perlin {Texture3D<float4>}: This is a 3D Perlin noise texture (currently) produced by a 
             //      3rd-party noise generator. Used to add fine details to the edge of the cloud shapes.
+            // _BlueNoise {Texture3D<float4>}: This is a 2D Blue noise texture taken from http://momentsingraphics.de/Media/BlueNoise/BlueNoise470.png.
+            //      Used to combat banding from quadrature.
             // sampler_Worley {SamplerState}: Used to sample from the Worley noise texture.
             // sampler_Perlin {SamplerState}: Used to sample from the Perlin noise texture.
+            // sampler_Blue {SamplerState}: Used to sample from the Blue noise texture.
             Texture3D<float4> _Worley; 
             Texture3D<float4> _Perlin;
+            Texture2D<float4> _BlueNoise;
             SamplerState sampler_Worley;
             SamplerState sampler_Perlin;
+            SamplerState sampler_BlueNoise;
             // - END: Textures passed from C# ------------------------------------------------------------------
-
-
-            // TODO: DEFINE
             
-            // END TODO
-
             // Constants
             const float PI = 3.141592;
             const float INV_PI = 0.31831;
@@ -188,8 +192,9 @@ Shader "Hidden/NewImageEffectShader"
             //          back scattering and positive values correspond to forward scattering.
             float Henyey_Greenstein(float cosTheta, float g) {
                 float g_sqrd = g * g;
-                float denom = 1.0f + g_sqrd + 2 * g * cosTheta;
-                return 4 * INV_PI * (1 - g_sqrd) / (denom * sqrt(denom));
+                float denom = 1.0f + g_sqrd - 2.0f * g * cosTheta;
+                float phase_boost_coeff =  (1.0f - g_sqrd) / (denom * sqrt(denom));
+                return phase_boost_coeff;
             }
 
             // - FUNCTION -
@@ -323,11 +328,17 @@ Shader "Hidden/NewImageEffectShader"
                 // now, we want to find the sample step size
                 // and ray entry & exit points
                 float step_size = dist_in_box / (float)_NumSamples;
-             
                 float3 cloud_entry_point = cam_ray.origin + cam_ray.direction * dist_to_box;
                 //float3 cloud_exit_point = cloud_entry_point + cam_ray.direction * dist_in_box;
-                float3 sample_point = cloud_entry_point;
 
+                // to minimize texture reads, we can jitter only the starting point offset using the blue noise texture.
+                float ray_entry_jitter = _BlueNoise.SampleLevel(sampler_BlueNoise, input.uv * _BlueNoiseStrength, 0) * 10 * _BlueNoiseStrength;
+
+                // phase function
+                float cosTheta = dot(cam_ray.direction, _WorldSpaceLightPos0.xyz);
+                float phase_coeff = 1.0f + Henyey_Greenstein(cosTheta, _ScatteringTerm) * 0.5 * _ScatteringCoeff;
+
+                float3 sample_point = cloud_entry_point + cam_ray.direction * ray_entry_jitter;
                 float density_measured = 0.0f;
                 float3 sunlight_transmittance = 0.0f; // start with 0 light energy from scattering and add up contributions from sunbeams
                 float occlusion_transmittance = 1.0f; // start with full transmittance and accumulate attenuations
@@ -335,7 +346,7 @@ Shader "Hidden/NewImageEffectShader"
                     // move sample point along ray by step size for each sample
                     // then, add up the density values and attenuate incoming light
                     // by the transmittance function.
-                    float dist_travelled = 0.0f;
+                    float dist_travelled = ray_entry_jitter;
                     while (dist_travelled < dist_in_box) {
                         density_measured = max(NoiseSampleDensity(sample_point), 0.0f);
 
@@ -362,7 +373,7 @@ Shader "Hidden/NewImageEffectShader"
                 // float transmittance = exp(-density_measured);
                 // the cloud's colour is the light energy accumulated multiplied by the sun's colour.
                 // the denser, the more that the cloud's colour contributes to the pixel.
-                float3 cloud_colour = exp(-_AbsorptionCoeff) * sunlight_transmittance * _SunColour;
+                float3 cloud_colour = exp(-_AbsorptionCoeff) * sunlight_transmittance * _SunColour * phase_coeff;
                 
                 // add attenuated colour of occluded geometry to the colour of the cloud itself to get the
                 // final colour for this pixel

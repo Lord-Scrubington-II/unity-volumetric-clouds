@@ -246,7 +246,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
+  m_Color: {r: 0.8018868, g: 0.73874956, b: 0.57872015, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -303,13 +303,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.21627791, y: -0.58084494, z: 0.6788472, w: -0.39371255}
+  m_LocalRotation: {x: 0.3419812, y: -0.48561093, z: 0.7299807, w: -0.33817032}
   m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 38.193, y: 432.855, z: -91.11}
+  m_LocalEulerAnglesHint: {x: 28.534, y: 430.417, z: -109.942}
 --- !u!1 &963028399
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,13 +483,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.18473016, y: 0.0038517138, z: 0.007831278, w: 0.98275054}
-  m_LocalPosition: {x: -0.000000004968, y: 4.86, z: -10}
+  m_LocalRotation: {x: -0.20875442, y: -0.7301932, z: -0.22812112, w: 0.60926205}
+  m_LocalPosition: {x: 326.2, y: -201.2, z: -219.2}
   m_LocalScale: {x: 1, y: 0.19943, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 21.286, y: 0.643, z: 1.034}
+  m_LocalEulerAnglesHint: {x: -35.981, y: -100.936, z: 1.904}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,19 +507,23 @@ MonoBehaviour:
   cloudContainer: {fileID: 1608765496}
   cloudShapeNoise: {fileID: 11700000, guid: b01c3abd14e744d25afed97c9b8ca279, type: 2}
   cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
-  cloudsOffset: {x: -6.71, y: 4.39, z: -1.49}
+  blueNoise: {fileID: 2800000, guid: a37e3dea24ed0bb4789b92f118260628, type: 3}
+  cloudsOffset: {x: -18.81, y: 4.39, z: -1.49}
   cloudsScale: 10.87
   shapeNoiseWeights: {x: 2.18, y: 0.15, z: 0.15, w: 0.42}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
-  cloudDetailScale: 6.4
-  cloudDetailWeight: 1.58
+  cloudDetailScale: 3.82
+  cloudDetailWeight: 2.1
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
   emptySpaceOffset: 4.02
-  densityControlMultiplier: 3.71
-  absorptionCoefficient: 0.52
-  darknessThreshold: 0.689
-  sampleCount: 102
-  lightSampleCount: 4
+  densityControlMultiplier: 12.6
+  absorptionCoefficient: 0.65
+  darknessThreshold: 0.92
+  forwardScattering: 0.831
+  scatteringCoefficient: 0.044
+  sampleCount: 25
+  lightSampleCount: 18
+  blueNoiseStrength: 10
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,13 +935,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.11535679, y: -0.121594265, z: -0.049338777, w: 0.98461837}
   m_LocalPosition: {x: -136, y: 46, z: -429.8}
   m_LocalScale: {x: 732.4136, y: 305.48624, z: 833.04047}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -13.837, y: -13.585, z: -4.081}
 --- !u!114 &1608765497
 MonoBehaviour:
   m_ObjectHideFlags: 0
