@@ -7,11 +7,11 @@ public class CloudRenderMaster : MonoBehaviour
 {
     private Camera masterCam;
     [Header(" - Scene & Asset Refs -")]
-    [SerializeField] private Light sun;
+    [SerializeField] private Light sun;  // set in inspector, should be the scene's directional light. 
 
     [SerializeField] private Shader cloudShader;
     [SerializeField] private Transform cloudContainer; // a transform that defines the box surrounding the cloud.
-    private Material cloudMaterial; // set in inspector, should be the scene's directional light. 
+    private Material cloudMaterial; // used to pass inspector vars
 
     // 3D Perlin-Worley shape and detail noise textures passed from inspector
     [SerializeField] private Texture3D cloudShapeNoise;

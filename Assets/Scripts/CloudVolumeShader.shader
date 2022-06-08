@@ -50,7 +50,7 @@ Shader "Hidden/NewImageEffectShader"
 	            // invert the projection of camera-space direction --> ndc-uv coordinates...
                 float3 direction = mul(_CameraInverseProjection, float4(ndc_xy, 0.0f, 1.0f)).xyz;
 
-	            // ...then, transform to world space. NOTE: Not yet normalized, as we need the length of this vector!
+	            // ...then, transform to world space and normalize.
                 direction = normalize(
                     mul(unity_CameraToWorld, float4(direction, 0.0f)).xyz
                 );
