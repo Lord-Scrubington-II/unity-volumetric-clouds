@@ -6,6 +6,7 @@ using UnityEngine;
 public class CloudRenderMaster : MonoBehaviour
 {
     private Camera masterCam;
+    [Header(" - Scene & Asset Refs -")]
     [SerializeField] private Light sun;
 
     [SerializeField] private Shader cloudShader;
@@ -18,10 +19,12 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] private Texture blueNoise; // for softening image by jittering raymarch start position
 
     // - BEGIN: Cloud sampling control vars -------
+
+    [Header (" - Cloud Sampling Control Vars -")]
     // Shape
     [SerializeField] private Vector3 cloudsOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
     [SerializeField] private float cloudsScale = 1.0f; // used to manipulate the mapping from texture to world space
-    [SerializeField] private Vector4 shapeNoiseWeights = new Vector4(1.0f, 0.0f, 0.0f, 0.0f); // relative weights to be used for the 4 different shape noise channels.
+    [SerializeField] private Vector4 cloudShapeNoiseWeights = new Vector4(1.0f, 0.0f, 0.0f, 0.0f); // relative weights to be used for the 4 different shape noise channels.
     
     // Detail
     [SerializeField] private Vector3 cloudDetailOffset = new Vector3(0.0f, 0.0f, 0.0f); // should allow the cloud to "move" in the box
@@ -29,6 +32,13 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] [Range(0, 3)] private float cloudDetailWeight = 1.0f; // used to manipulate importance of the detail noise
     [SerializeField] private Vector3 detailNoiseChannelWeights = new Vector3(1.0f, 0.0f, 0.0f); // relative weights to be used for the 3 different shape noise channels.
 
+    [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
+    [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
+
+    // - End: Cloud sampling control vars ---------
+
+    [Header(" - Lighting Params -")]
     // Lighting
     [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
     [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
@@ -37,10 +47,6 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] [Range(-1, 1)] private float forwardScattering = 0.5f; // the scattering term of the Henyey-Greenstein phase function.
     [SerializeField] [Range(0, 1)] private float scatteringCoefficient = 0.2f; // the scattering term of the Henyey-Greenstein phase function.
 
-    [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
-    [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
-    [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
-    // - End: Cloud sampling control vars -------
 
     public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
     public float CloudsScale { get => cloudsScale; set => cloudsScale = value; }
@@ -50,7 +56,7 @@ public class CloudRenderMaster : MonoBehaviour
     public int LightSampleCount { get => lightSampleCount; set => lightSampleCount = value; }
     public float AbsorptionCoefficient { get => absorptionCoefficient; set => absorptionCoefficient = value; }
     public float DarknessThreshold { get => darknessThreshold; set => darknessThreshold = value; }
-    public Vector4 ShapeNoiseWeights { get => shapeNoiseWeights; set => shapeNoiseWeights = value; }
+    public Vector4 ShapeNoiseWeights { get => cloudShapeNoiseWeights; set => cloudShapeNoiseWeights = value; }
     public Vector3 CloudDetailOffset { get => cloudDetailOffset; set => cloudDetailOffset = value; }
     public float CloudDetailScale { get => cloudDetailScale; set => cloudDetailScale = value; }
     public Vector3 DetailNoiseChannelWeights { get => detailNoiseChannelWeights; set => detailNoiseChannelWeights = value; }

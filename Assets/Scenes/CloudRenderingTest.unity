@@ -303,13 +303,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.3419812, y: -0.48561093, z: 0.7299807, w: -0.33817032}
+  m_LocalRotation: {x: 0.3699251, y: -0.48586026, z: 0.6919289, w: -0.38513592}
   m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 28.534, y: 430.417, z: -109.942}
+  m_LocalEulerAnglesHint: {x: 22.794, y: 433.995, z: -104.525}
 --- !u!1 &963028399
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +417,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194231}
   - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
@@ -510,20 +511,20 @@ MonoBehaviour:
   blueNoise: {fileID: 2800000, guid: a37e3dea24ed0bb4789b92f118260628, type: 3}
   cloudsOffset: {x: -18.81, y: 4.39, z: -1.49}
   cloudsScale: 10.87
-  shapeNoiseWeights: {x: 2.18, y: 0.15, z: 0.15, w: 0.42}
+  cloudShapeNoiseWeights: {x: 1.96, y: 0.39, z: 0.27, w: 0.24}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
   cloudDetailScale: 3.82
   cloudDetailWeight: 2.1
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
+  sampleCount: 25
+  lightSampleCount: 5
+  blueNoiseStrength: 10
   emptySpaceOffset: 4.02
   densityControlMultiplier: 12.6
   absorptionCoefficient: 0.65
   darknessThreshold: 0.92
   forwardScattering: 0.831
   scatteringCoefficient: 0.044
-  sampleCount: 25
-  lightSampleCount: 18
-  blueNoiseStrength: 10
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,6 +540,20 @@ MonoBehaviour:
   turnSpeed: 20
   panSpeed: 20
   movementBoostCoefficient: 2
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c51c4cf18ac834a9758ed203591a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windVelocity: {x: 1.82, y: 0, z: 1}
+  windTurbulence: {x: -10.46, y: -9.06, z: -1}
 --- !u!1 &1010369212
 GameObject:
   m_ObjectHideFlags: 0

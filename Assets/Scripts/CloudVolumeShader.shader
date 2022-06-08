@@ -335,7 +335,7 @@ Shader "Hidden/NewImageEffectShader"
                 float ray_entry_jitter = _BlueNoise.SampleLevel(sampler_BlueNoise, input.uv * _BlueNoiseStrength, 0) * 10 * _BlueNoiseStrength;
 
                 // phase function
-                float cosTheta = dot(cam_ray.direction, _WorldSpaceLightPos0.xyz);
+                float cosTheta = dot(cam_ray.direction, -_SunDir);
                 float phase_coeff = 1.0f + Henyey_Greenstein(cosTheta, _ScatteringTerm) * 0.5 * _ScatteringCoeff;
 
                 float3 sample_point = cloud_entry_point + cam_ray.direction * ray_entry_jitter;
