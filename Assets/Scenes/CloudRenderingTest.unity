@@ -326,15 +326,15 @@ MonoBehaviour:
   cloudDetailScale: 3.82
   cloudDetailWeight: 2.1
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
-  sampleCount: 25
+  sampleCount: 27
   lightSampleCount: 5
-  blueNoiseStrength: 10
+  blueNoiseStrength: 6.53
   emptySpaceOffset: 4.02
-  densityControlMultiplier: 12.6
+  densityControlMultiplier: 26.9
   absorptionCoefficient: 0.59
   darknessThreshold: 0.92
-  forwardScattering: 0.8
-  scatteringCoefficient: 0.51
+  forwardScattering: 0.87
+  scatteringCoefficient: 0.2
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ Transform:
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: -0.11535679, y: -0.121594265, z: -0.049338777, w: 0.98461837}
   m_LocalPosition: {x: -136, y: 46, z: -429.8}
-  m_LocalScale: {x: 732.4136, y: 305.48624, z: 833.04047}
+  m_LocalScale: {x: 1135.2097, y: 305.48624, z: 1120.9392}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

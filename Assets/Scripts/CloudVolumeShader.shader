@@ -231,7 +231,7 @@ Shader "Hidden/NewImageEffectShader"
 
                 // we want to now calculate some reasonable falloff at all the edges of the container
                 // so that they don't appear flattened against the edges of the bounding box.
-                // adapted from Sebastian Lague's code!
+                // Adapted from Sebastian Lague's code
                 const float container_edge_fade_dist = 30;
                 float dist_edges_x = min(container_edge_fade_dist, abs(min(pos.x - _BoxMin.x, _BoxMax.x - pos.x)));
                 float dist_edges_y = min(container_edge_fade_dist, abs(min(pos.y - _BoxMin.y, _BoxMax.y - pos.y)));

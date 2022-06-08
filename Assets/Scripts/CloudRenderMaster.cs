@@ -44,8 +44,8 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
     [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
-    [SerializeField]  private float forwardScattering = 0.5f; // the scattering term of the Henyey-Greenstein phase function.
-    [SerializeField]  private float scatteringCoefficient = 0.2f; // the scattering term of the Henyey-Greenstein phase function.
+    [SerializeField] [Range(-1, 1)] private float forwardScattering = 0.5f; // the scattering term of the Henyey-Greenstein phase function.
+    [SerializeField] [Range(0, 1)] private float scatteringCoefficient = 0.2f; // the scattering term of the Henyey-Greenstein phase function.
 
 
     public Vector3 CloudsOffset { get => cloudsOffset; set => cloudsOffset = value; }
