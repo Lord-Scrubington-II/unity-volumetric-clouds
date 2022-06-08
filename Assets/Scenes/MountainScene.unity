@@ -326,9 +326,9 @@ MonoBehaviour:
   cloudDetailScale: 3.82
   cloudDetailWeight: 2.15
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
-  sampleCount: 25
-  lightSampleCount: 14
-  blueNoiseStrength: 10
+  sampleCount: 35
+  lightSampleCount: 10
+  blueNoiseStrength: 10.7
   emptySpaceOffset: 3.9
   densityControlMultiplier: 0.97
   absorptionCoefficient: 0.49
@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c51c4cf18ac834a9758ed203591a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windVelocity: {x: 1.82, y: 0, z: 1}
+  windVelocity: {x: -3.02, y: 0, z: 1}
   windTurbulence: {x: -10.46, y: -9.06, z: -1}
 --- !u!1 &1010369212
 GameObject:
@@ -475,8 +475,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -312, y: -67, z: -429.8}
-  m_LocalScale: {x: 7665.1147, y: 1294.1997, z: 2611.1138}
+  m_LocalPosition: {x: 345, y: -67, z: -81}
+  m_LocalScale: {x: 6065.297, y: 1860.4121, z: 2611.1138}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4

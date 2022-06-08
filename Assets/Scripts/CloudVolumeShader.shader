@@ -150,8 +150,8 @@ Shader "Hidden/NewImageEffectShader"
             // - END: Textures passed from C# ------------------------------------------------------------------
             
             // Constants
-            const float PI = 3.141592;
-            const float INV_PI = 0.31831;
+            static float PI = 3.141592;
+            static float INV_PI = 0.31831;
 
             // Ray-box intersection
             bool BoxIntersects(
@@ -193,7 +193,7 @@ Shader "Hidden/NewImageEffectShader"
             float Henyey_Greenstein(float cosTheta, float g) {
                 float g_sqrd = g * g;
                 float denom = 1.0f + g_sqrd - 2.0f * g * cosTheta;
-                float phase_boost_coeff =  (1.0f - g_sqrd) / (denom * sqrt(denom));
+                float phase_boost_coeff = 0.25 * INV_PI * (1.0f - g_sqrd) / (denom * sqrt(denom));
                 return phase_boost_coeff;
             }
 
@@ -204,7 +204,7 @@ Shader "Hidden/NewImageEffectShader"
             // - PARAMS - 
             //  float density: The measured density over the path towards the light
             //  float atten_coeff: A (mostly artistic) attenuation coefficient which can be used 
-            //          to manipulate the absorbtion.
+            //          to manipulate the absorption.
             float Beer(float density, float atten_coeff) {
                 float transmittance = exp(-density * atten_coeff);
                 return transmittance;
