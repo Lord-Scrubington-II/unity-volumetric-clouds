@@ -323,7 +323,7 @@ MonoBehaviour:
   cloudsScale: 2.76
   cloudShapeNoiseWeights: {x: 2.87, y: 0.39, z: 0.27, w: 0.24}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
-  cloudDetailScale: 3.82
+  cloudDetailScale: 3.1
   cloudDetailWeight: 2.15
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
   sampleCount: 35
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windVelocity: {x: -3.02, y: 0, z: 1}
-  windTurbulence: {x: -10.46, y: -9.06, z: -1}
+  windTurbulence: {x: -0.23, y: -2.09, z: 2.7}
 --- !u!1 &1010369212
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,12 +35,12 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
     [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
 
     // - End: Cloud sampling control vars ---------
 
     [Header(" - Lighting Params -")]
     // Lighting
-    [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
     [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
     [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
