@@ -284,7 +284,7 @@ Shader "Hidden/NewImageEffectShader"
                 BoxIntersects(to_light, _BoxMin, _BoxMax, dist_to_box, dist_in_box);
 
                 float density_measured = 0.0f;
-                float density_read_pos = start_point;
+                float3 density_read_pos = start_point;
                 float step_size = dist_in_box / (float)_StepsToLight;
             
                 // praise the sun \[T]/
@@ -336,7 +336,7 @@ Shader "Hidden/NewImageEffectShader"
 
                 // phase function
                 float cosTheta = dot(cam_ray.direction, -_SunDir);
-                float phase_coeff = 1.0f + Henyey_Greenstein(cosTheta, _ScatteringTerm) * 0.5 * _ScatteringCoeff;
+                float phase_coeff = 1.0f + Henyey_Greenstein(cosTheta, _ScatteringTerm) * _ScatteringCoeff;
 
                 float3 sample_point = cloud_entry_point + cam_ray.direction * ray_entry_jitter;
                 float density_measured = 0.0f;
@@ -373,7 +373,7 @@ Shader "Hidden/NewImageEffectShader"
                 // float transmittance = exp(-density_measured);
                 // the cloud's colour is the light energy accumulated multiplied by the sun's colour.
                 // the denser, the more that the cloud's colour contributes to the pixel.
-                float3 cloud_colour = exp(-_AbsorptionCoeff) * sunlight_transmittance * _SunColour * phase_coeff;
+                float3 cloud_colour = sunlight_transmittance * _SunColour * phase_coeff;
                 
                 // add attenuated colour of occluded geometry to the colour of the cloud itself to get the
                 // final colour for this pixel

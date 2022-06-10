@@ -33,7 +33,7 @@ public class CloudRenderMaster : MonoBehaviour
     [SerializeField] private Vector3 detailNoiseChannelWeights = new Vector3(1.0f, 0.0f, 0.0f); // relative weights to be used for the 3 different shape noise channels.
 
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
-    [SerializeField] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(1, 10)] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
 

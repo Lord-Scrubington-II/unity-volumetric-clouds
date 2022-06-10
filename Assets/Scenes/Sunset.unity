@@ -152,7 +152,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.9917746, b: 0.9481132, a: 1}
+  m_Color: {r: 0.8113208, g: 0.66115385, b: 0.4247953, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -209,13 +209,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.41946805, y: -0.102200426, z: 0.17927009, w: 0.8840045}
-  m_LocalPosition: {x: -0.29, y: -66, z: -9.66}
+  m_LocalRotation: {x: 0.017001057, y: -0.04884776, z: 0.0005442052, w: 0.9986614}
+  m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 51.102, y: -2.765, z: 21.605}
+  m_LocalEulerAnglesHint: {x: 1.949, y: -5.601, z: -0.033}
 --- !u!114 &705507996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18143f6efbedc44fa559c7600e81b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sunsetSpeed: 0.2
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +282,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1339.33
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -307,13 +308,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.070120335, y: -0.9103422, z: -0.40364113, w: 0.05860141}
-  m_LocalPosition: {x: 213.6, y: -335.5, z: 402.8}
+  m_LocalRotation: {x: -0.0065441183, y: -0.99583036, z: -0.06103179, w: 0.067484245}
+  m_LocalPosition: {x: 181, y: 192, z: -139}
   m_LocalScale: {x: 1, y: 0.19943, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -47.998, y: -175.707, z: 6.897}
+  m_LocalEulerAnglesHint: {x: -7.033, y: -172.263, z: 0.277}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,22 +333,22 @@ MonoBehaviour:
   cloudShapeNoise: {fileID: 11700000, guid: b01c3abd14e744d25afed97c9b8ca279, type: 2}
   cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
   blueNoise: {fileID: 2800000, guid: a37e3dea24ed0bb4789b92f118260628, type: 3}
-  cloudsOffset: {x: -19.66, y: 8.06, z: -1.49}
-  cloudsScale: 5.78
-  cloudShapeNoiseWeights: {x: 1.96, y: 0.82, z: 0.27, w: 0.24}
+  cloudsOffset: {x: -18.81, y: 4.03, z: -1.49}
+  cloudsScale: 10.87
+  cloudShapeNoiseWeights: {x: 1.96, y: 0.39, z: 0.27, w: 0.24}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
-  cloudDetailScale: 4.18
-  cloudDetailWeight: 1.32
+  cloudDetailScale: 3.82
+  cloudDetailWeight: 2.1
   detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
-  sampleCount: 47
+  sampleCount: 52
   lightSampleCount: 4
-  blueNoiseStrength: 6.2
-  emptySpaceOffset: 4.41
-  densityControlMultiplier: 5.38
-  absorptionCoefficient: 1.35
-  darknessThreshold: 0.144
-  forwardScattering: 0.86
-  scatteringCoefficient: 0.415
+  blueNoiseStrength: 6.26
+  emptySpaceOffset: 4.4
+  densityControlMultiplier: 6.79
+  absorptionCoefficient: 0.71
+  darknessThreshold: 0.373
+  forwardScattering: 0.56
+  scatteringCoefficient: 0.2
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,8 +403,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 85, y: 179, z: -429.8}
-  m_LocalScale: {x: 1700.1581, y: 327.08414, z: 1585.008}
+  m_LocalPosition: {x: 85, y: 257, z: -429.8}
+  m_LocalScale: {x: 1135.2097, y: 305.48624, z: 1120.9392}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
