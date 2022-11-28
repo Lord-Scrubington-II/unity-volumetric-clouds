@@ -320,20 +320,20 @@ MonoBehaviour:
   cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
   blueNoise: {fileID: 2800000, guid: a37e3dea24ed0bb4789b92f118260628, type: 3}
   cloudsOffset: {x: -18.81, y: 4.39, z: -1.49}
-  cloudsScale: 1.23
+  cloudsScale: 0.92
   cloudShapeNoiseWeights: {x: 2.87, y: 0.39, z: 0.27, w: 0.24}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
   cloudDetailScale: 3.1
   cloudDetailWeight: 2.72
-  detailNoiseChannelWeights: {x: 5.24, y: 2.25, z: 2.97}
-  sampleCount: 35
-  lightSampleCount: 10
-  blueNoiseStrength: 10.7
-  emptySpaceOffset: 4.16
-  densityControlMultiplier: 0.97
+  detailNoiseChannelWeights: {x: 5.24, y: 4.11, z: 2.97}
+  sampleCount: 52
+  lightSampleCount: 4
+  blueNoiseStrength: 12.5
+  emptySpaceOffset: 4.83
+  densityControlMultiplier: 1.39
   absorptionCoefficient: 0.69
-  darknessThreshold: 0.36
-  forwardScattering: 0.801
+  darknessThreshold: 0.407
+  forwardScattering: 0.46
   scatteringCoefficient: 0.039
 --- !u!114 &963194230
 MonoBehaviour:
@@ -389,8 +389,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608765495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 345, y: 290.9, z: -81}
-  m_LocalScale: {x: 6065.297, y: 2788.46, z: 2611.1138}
+  m_LocalPosition: {x: 345, y: 292.9, z: -81}
+  m_LocalScale: {x: 6065.297, y: 4699.1206, z: 10694.861}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4

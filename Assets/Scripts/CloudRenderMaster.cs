@@ -34,7 +34,7 @@ public class CloudRenderMaster : MonoBehaviour
 
     [SerializeField] [Range(1, 200)] private int sampleCount = 6; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(1, 10)] private int lightSampleCount = 5; // controls # of steps taken when marching the light ray
-    [SerializeField] [Range(1, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
+    [SerializeField] [Range(0, 15)] private float blueNoiseStrength = 5; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(0, 10)] private float emptySpaceOffset = 0.2f; // any density reading below this threshold is considered 0
 
     // - End: Cloud sampling control vars ---------
@@ -42,7 +42,8 @@ public class CloudRenderMaster : MonoBehaviour
     [Header(" - Lighting Params -")]
     // Lighting
     [SerializeField] private float densityControlMultiplier = 1.0f; // just a multiplier for the density reading, should be used to manipulate cloud darkness
-    [SerializeField] private float absorptionCoefficient = 1.0f; // controls # of steps taken when marching the light ray
+    [SerializeField] private float absorptionCoefficient = 1.0f; // controls light attenuation along primary ray
+    [SerializeField] private float absorptionCoefficientToSun = 1.0f; // controls light attenuation along secondary rays
     [SerializeField] [Range(0, 1)] private float darknessThreshold = 0.5f; // controls # of steps taken when marching the light ray
     [SerializeField] [Range(-1, 1)] private float forwardScattering = 0.5f; // the scattering term of the Henyey-Greenstein phase function.
     [SerializeField] [Range(0, 1)] private float scatteringCoefficient = 0.2f; // the scattering term of the Henyey-Greenstein phase function.
@@ -64,6 +65,7 @@ public class CloudRenderMaster : MonoBehaviour
     public float ForwardScattering { get => forwardScattering; set => forwardScattering = value; }
     public float ScatteringCoefficient { get => scatteringCoefficient; set => scatteringCoefficient = value; }
     public float BlueNoiseStrength { get => blueNoiseStrength; set => blueNoiseStrength = value; }
+    public float AbsorptionCoefficientToSun { get => absorptionCoefficientToSun; set => absorptionCoefficientToSun = value; }
 
     private void Awake()
     {
@@ -122,6 +124,7 @@ public class CloudRenderMaster : MonoBehaviour
         cloudMaterial.SetFloat("_DensityReadOffset", EmptySpaceOffset);
         cloudMaterial.SetFloat("_DensityMult", DensityControlMultiplier);
         cloudMaterial.SetFloat("_AbsorptionCoeff", AbsorptionCoefficient);
+        cloudMaterial.SetFloat("_AbsorptionCoeffSecondary", AbsorptionCoefficientToSun);
         cloudMaterial.SetFloat("_DarknessThreshold", DarknessThreshold);
         cloudMaterial.SetFloat("_ScatteringTerm", ForwardScattering);
         cloudMaterial.SetFloat("_ScatteringCoeff", ScatteringCoefficient);

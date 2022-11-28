@@ -121,7 +121,8 @@ Shader "Hidden/NewImageEffectShader"
             // lighting vars
             float _DensityReadOffset; // to be subtracted from the density reading
             float _DensityMult; // just a multiplier for the density reading, should be used to manipulate cloud darkness
-            float _AbsorptionCoeff; // used to manipulate absorption from Beer's law
+            float _AbsorptionCoeff; // used to manipulate absorption from Beer's law along primary ray. Increasing this makes clouds darker.
+            float _AbsorptionCoeffSecondary; // used to manipulate absorption from Beer's law along secondary rays. Increasing this makes clouds self-shadow more.
             float _DarknessThreshold; // minimum light transmittance along the secondary rays
             float _ScatteringTerm; // the scattering term of the Henyey-Greenstein phase function.
             float _ScatteringCoeff; // for controlling the forward scattering
@@ -297,7 +298,7 @@ Shader "Hidden/NewImageEffectShader"
                 }
 
                 // return density_measured;
-                float transmittance = Beer(density_measured, _AbsorptionCoeff);
+                float transmittance = Beer(density_measured, _AbsorptionCoeffSecondary);
                 
                 // idea of including this darkness threshold comes from Sebastian Lague's video.
                 // allows me to manipulate the darkness of the clouds with greater weight given to denser areas.
@@ -351,7 +352,7 @@ Shader "Hidden/NewImageEffectShader"
                         density_measured = max(NoiseSampleDensity(sample_point), 0.0f);
 
                         if (density_measured > 0) { // only for nonzero density reads to we want to march towards light
-                            // transmittance along sunbeam
+                            // transmittance along secondary ray
                             float source_transmittance = LightMarch(sample_point);
                             sunlight_transmittance += density_measured * step_size * occlusion_transmittance * source_transmittance;
 

@@ -209,13 +209,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.017001057, y: -0.04884776, z: 0.0005442052, w: 0.9986614}
+  m_LocalRotation: {x: 0.055059873, y: -0.048951216, z: -0.0029266083, w: 0.9972781}
   m_LocalPosition: {x: -0.29, y: 6.8, z: -9.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 1.949, y: -5.601, z: -0.033}
+  m_LocalEulerAnglesHint: {x: 6.288, y: -5.656, z: -0.647}
 --- !u!114 &705507996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,7 +333,7 @@ MonoBehaviour:
   cloudShapeNoise: {fileID: 11700000, guid: b01c3abd14e744d25afed97c9b8ca279, type: 2}
   cloudDetailNoise: {fileID: 11700000, guid: 65f4318d72e2308498dba478aa763a7c, type: 2}
   blueNoise: {fileID: 2800000, guid: a37e3dea24ed0bb4789b92f118260628, type: 3}
-  cloudsOffset: {x: -18.81, y: 4.03, z: -1.49}
+  cloudsOffset: {x: -18.81, y: -0.8, z: -1.49}
   cloudsScale: 10.87
   cloudShapeNoiseWeights: {x: 1.96, y: 0.39, z: 0.27, w: 0.24}
   cloudDetailOffset: {x: 1.9, y: 0, z: 0}
@@ -347,8 +347,8 @@ MonoBehaviour:
   densityControlMultiplier: 6.79
   absorptionCoefficient: 0.71
   darknessThreshold: 0.373
-  forwardScattering: 0.56
-  scatteringCoefficient: 0.2
+  forwardScattering: 0.82
+  scatteringCoefficient: 0.144
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
